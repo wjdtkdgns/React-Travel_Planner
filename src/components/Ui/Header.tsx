@@ -1,52 +1,75 @@
 import styled from "styled-components";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { SidebarData } from "./SidebarData";
+import SetNewMarker from "../Sidebar/SetNewMarker";
+import ShowMarkerList from "../Sidebar/ShowMarkerList";
+import SearchModal from "../Search/SearchModal";
 
 interface NavMenuType {
   sidebar: boolean;
 }
 
+interface SearchModalType {
+  searchModal: boolean;
+}
+
 const Header = () => {
   const [sidebar, setSidebar] = useState(false);
+  const [searchModal, setSearchModal] = useState(false);
 
   const showSidebar = () => {
     setSidebar(!sidebar);
-    console.log("asdas");
+  };
+
+  const showSearchModal = () => {
+    setSearchModal(!searchModal);
   };
 
   return (
     <Layout>
-      <Navbar onClick={showSidebar}>
-        <img src="/img/MenuIcon.png" alt="menu" />
+      <Navbar>
+        <img onClick={showSidebar} src="/img/MenuIcon.png" alt="menu" />
       </Navbar>
       <NavMenu sidebar={sidebar}>
-        <ul className="nav-menu-items" onClick={showSidebar}>
-          <NavbarToggle>
+        <ul>
+          <NavbarToggle onClick={showSidebar}>
             <img src="/img/CloseIcon.png" alt="menu" />
           </NavbarToggle>
-          {SidebarData.map((item, index) => {
-            return (
-              <NavText key={index}>
-                <Link to={item.path}>
-                  <span>{item.title}</span>
-                </Link>
-              </NavText>
-            );
-          })}
+          <SetNewMarker />
+          <ShowMarkerList />
         </ul>
       </NavMenu>
-      <p>Planning with Kakao Map</p>
+      <p>Kakao Map</p>
+      <img
+        src="/img/SearchIconBlack.png"
+        alt="menu"
+        onClick={showSearchModal}
+      />
+      <SearchLayout searchModal={searchModal}>
+        <SearchModal />
+      </SearchLayout>
     </Layout>
   );
 };
 
 export default Header;
 
+const SearchLayout = styled.div<SearchModalType>`
+  overflow: auto;
+  width: 500px;
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 12vh;
+  right: ${(props) => (!props.searchModal ? "-10%" : "-110%")};
+  transition: ${(props) => (!props.searchModal ? "750ms" : "450ms")};
+  z-index: 500;
+`;
+
 const Layout = styled.div`
   width: 100%;
-  height: 60px;
+  height: 8vh;
 
   background-color: #f9e000;
   box-sizing: border-box;
@@ -54,10 +77,9 @@ const Layout = styled.div`
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   & p {
-    padding-left: calc(50% - 40px - 161.5px);
-
     color: #371d1e;
     margin: 0px;
     font-size: 30px;
@@ -75,7 +97,8 @@ const Navbar = styled.div`
 `;
 
 const NavMenu = styled.nav<NavMenuType>`
-  background-color: rgb(255, 255, 255);
+  overflow: auto;
+  background-color: rgba(235, 235, 235, 0.8);
   width: 400px;
   height: 100vh;
   display: flex;
@@ -88,6 +111,7 @@ const NavMenu = styled.nav<NavMenuType>`
 
   & ul {
     width: 100%;
+    padding: 0px 30px;
   }
 `;
 
@@ -98,17 +122,4 @@ const NavbarToggle = styled.li`
   justify-content: start;
   align-items: center;
   text-decoration: none;
-`;
-
-const NavText = styled.li`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  padding: 8px 0px 8px 16px;
-  list-style: none;
-  height: 60px;
-
-  & span {
-    margin-left: 16px;
-  }
 `;

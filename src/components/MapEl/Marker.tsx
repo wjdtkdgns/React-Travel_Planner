@@ -1,9 +1,10 @@
 import { MapMarker } from "react-kakao-maps-sdk";
 
-const Marker = (props: { lat: number; lng: number }) => {
+const Marker = (props: { lat: number; lng: number; onClick?: any }) => {
   return (
     <MapMarker // 마커를 생성합니다
-      position={props}
+      onClick={props.onClick}
+      position={{ lat: props.lat, lng: props.lng }}
       image={{
         src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png", // 마커이미지의 주소입니다
         size: {

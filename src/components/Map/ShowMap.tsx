@@ -1,34 +1,33 @@
-import { Fragment } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { useState } from "react";
+import { Map } from "react-kakao-maps-sdk";
+import { Fragment, useState } from "react";
 import Marker from "../MapEl/Marker";
 import Overlay from "../MapEl/Overlay";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { markerList, tempPosition } from "../../store/recoil";
+import Search from "../Search/asdas";
 
-const positions = [
-  { lat: 33.44975, lng: 126.56967 },
-  { lat: 33.450579, lng: 126.56956 },
-  { lat: 33.4506468, lng: 126.5707 },
-];
-
-const EventMarkerContainer = ({
-  position,
-  onClick,
-}: {
-  position: any;
-  onClick: any;
-}) => {
-  return (
-    <MapMarker
-      position={position} // 마커를 표시할 위치
-      onClick={onClick}
-    ></MapMarker>
-  );
-};
+export interface markerData {
+  title: string;
+  body: string;
+  lat: number;
+  lng: number;
+}
 
 const ShowMap = () => {
-  const [position, setPosition] = useState<any>();
-  const [clickedMarkerPosition, setClickedMarkerPosition] = useState<any>();
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedMarker, setSelectedMarker] = useState<markerData[]>([]);
+  const [temp, setTempPosition] = useRecoilState(tempPosition);
+  const markers = useRecoilValue(markerList);
+
+  const controlOverlayHandler = (marker: markerData) => {
+    if (selectedMarker.includes(marker)) {
+      const updatedSelectedMarker = selectedMarker.filter(
+        (el) => el !== marker
+      );
+      setSelectedMarker(updatedSelectedMarker);
+    } else {
+      setSelectedMarker((prev) => [...prev, marker]);
+    }
+  };
 
   return (
     <Fragment>
@@ -41,30 +40,36 @@ const ShowMap = () => {
         style={{
           // 지도의 크기
           width: "100%",
-          height: "100vh",
+          height: "92vh",
         }}
         level={3} // 지도의 확대 레벨
-        onClick={(_t: any, mouseEvent: any) =>
-          setPosition({
+        onClick={(
+          _t: kakao.maps.Map,
+          mouseEvent: kakao.maps.event.MouseEvent
+        ) =>
+          setTempPosition({
             lat: mouseEvent.latLng.getLat(),
             lng: mouseEvent.latLng.getLng(),
           })
         }
       >
-        {positions.map((position, index) => (
-          <EventMarkerContainer
-            key={`EventMarkerContainer-${position.lat}-${position.lng}`}
-            position={position}
-            onClick={() => {
-              setIsOpen(!isOpen);
-              setClickedMarkerPosition(position);
-            }}
+        {markers.map((marker: markerData) => (
+          <Marker
+            key={`EventMarkerContainer-${marker.lat}-${marker.lng}`}
+            lat={marker.lat}
+            lng={marker.lng}
+            onClick={controlOverlayHandler.bind(null, marker)}
           />
         ))}
-        {isOpen && (
-          <Overlay position={clickedMarkerPosition} setIsOpen={setIsOpen} />
-        )}
-        {position && <Marker lat={position.lat} lng={position.lng} />}
+        {selectedMarker.map((marker: markerData, index: number) => (
+          <Overlay
+            marker={marker}
+            onClose={controlOverlayHandler}
+            key={index}
+          />
+        ))}
+        {temp && <Marker lat={temp.lat} lng={temp.lng} />}
+        <Search />
       </Map>
     </Fragment>
   );
