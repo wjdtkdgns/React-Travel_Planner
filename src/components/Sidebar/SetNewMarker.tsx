@@ -1,25 +1,33 @@
-import { Fragment, useCallback, useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { Fragment, useRef } from "react";
+import { useRecoilValue, useRecoilState } from "recoil";
 import styled from "styled-components";
 import { markerList, tempPosition } from "../../store/recoil";
 
 const SetNewMarker = () => {
   const position = useRecoilValue(tempPosition);
-  const setMarkerList = useSetRecoilState(markerList);
+  const [markers, setMarkerList] = useRecoilState(markerList);
   const titleRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const submitHandler = (e: any) => {
     e.preventDefault();
-    setMarkerList((prev: any[]) => [
-      ...prev,
-      {
-        title: titleRef.current!.value,
-        body: bodyRef.current!.value,
-        lat: position.lat,
-        lng: position.lng,
-      },
-    ]);
+    if (
+      !markers.some(
+        (marker) => marker.lat === position.lat && marker.lng === position.lng
+      )
+    ) {
+      setMarkerList((prev: any[]) => [
+        ...prev,
+        {
+          title: titleRef.current!.value,
+          body: bodyRef.current!.value,
+          lat: position.lat,
+          lng: position.lng,
+        },
+      ]);
+    } else {
+      alert("같은 위치가 이미 추가되어 있습니다.");
+    }
     titleRef.current!.value = "";
     bodyRef.current!.value = "";
   };

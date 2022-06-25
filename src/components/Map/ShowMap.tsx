@@ -53,14 +53,16 @@ const ShowMap = () => {
           })
         }
       >
-        {markers.map((marker: markerData) => (
-          <Marker
-            key={`EventMarkerContainer-${marker.lat}-${marker.lng}`}
-            lat={marker.lat}
-            lng={marker.lng}
-            onClick={controlOverlayHandler.bind(null, marker)}
-          />
-        ))}
+        {markers.map((marker: markerData) => {
+          return (
+            <Marker
+              key={`EventMarkerContainer-${marker.lat}-${marker.lng}`}
+              lat={marker.lat}
+              lng={marker.lng}
+              onClick={controlOverlayHandler.bind(null, marker)}
+            />
+          );
+        })}
         {selectedMarker.map((marker: markerData, index: number) => (
           <Overlay
             marker={marker}

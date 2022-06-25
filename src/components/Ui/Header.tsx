@@ -62,7 +62,7 @@ const SearchLayout = styled.div<SearchModalType>`
   justify-content: center;
   position: fixed;
   top: 12vh;
-  right: ${(props) => (!props.searchModal ? "-10%" : "-110%")};
+  right: ${(props) => (props.searchModal ? "-10%" : "-110%")};
   transition: ${(props) => (!props.searchModal ? "750ms" : "450ms")};
   z-index: 500;
 `;
@@ -70,6 +70,7 @@ const SearchLayout = styled.div<SearchModalType>`
 const Layout = styled.div`
   width: 100%;
   height: 8vh;
+  min-height: 40px;
 
   background-color: #f9e000;
   box-sizing: border-box;

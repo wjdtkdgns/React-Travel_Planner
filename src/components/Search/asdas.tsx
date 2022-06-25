@@ -1,13 +1,20 @@
 import { useState, useEffect, Fragment } from "react";
 import { MapMarker, useMap } from "react-kakao-maps-sdk";
-import { useRecoilState } from "recoil";
-import { searchedMarker } from "../../store/recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  paginationValue,
+  searchedMarker,
+  searchKeyword,
+} from "../../store/recoil";
 
 const Search = () => {
   // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
   const bounds = new window.kakao.maps.LatLngBounds();
   const map = useMap();
   const [markers, setMarkers] = useRecoilState(searchedMarker);
+  const keyword = useRecoilValue(searchKeyword);
+  const setPaginationValue = useSetRecoilState(paginationValue);
+  const [info, setInfo] = useState<any>(false);
 
   // // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
   // // 인포윈도우에 장소명을 표시합니다
@@ -30,12 +37,14 @@ const Search = () => {
     if (status === window.kakao.maps.services.Status.OK) {
       // 정상적으로 검색이 완료됐으면
       // 검색 목록과 마커를 표출합니다
+      setPaginationValue(pagination);
+      setMarkers([]);
       data.map((marker: any, index: number) => {
         setMarkers((prev: any[]) => [...prev, marker]);
         bounds.extend(new window.window.kakao.maps.LatLng(marker.y, marker.x));
       });
       map.setBounds(bounds);
-      // 페이지 번호를 표출합니다
+
       // displayPagination(pagination);
     } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
       alert("검색 결과가 존재하지 않습니다.");
@@ -50,13 +59,12 @@ const Search = () => {
     if (!map) return;
     const ps = new window.kakao.maps.services.Places(map);
 
-    ps.keywordSearch(
-      "kakao 제주",
-      (data: any, status: any, pagination: any) => {
+    if (keyword !== "") {
+      ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
         placesSearchCB({ data, status, pagination });
-      }
-    );
-  }, []);
+      });
+    }
+  }, [keyword]);
 
   return (
     <Fragment>
@@ -75,7 +83,13 @@ const Search = () => {
                 offset: { x: 13, y: 37 },
               },
             }}
-          />
+            onMouseOver={() => setInfo(marker)}
+            onMouseOut={() => setInfo(null)}
+          >
+            {info && info.x === marker.x && info.y === marker.y && (
+              <div style={{ color: "#000" }}>{marker.place_name}</div>
+            )}
+          </MapMarker>
         );
       })}
     </Fragment>

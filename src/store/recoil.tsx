@@ -18,3 +18,13 @@ export const searchedMarker = atom<any[]>({
   key: "searchedMarker",
   default: [],
 });
+
+export const searchKeyword = atom<string>({
+  key: "searchKeyword",
+  default: "",
+});
+
+export const paginationValue = atom<any>({
+  key: "paginationValue",
+  default: "",
+});
