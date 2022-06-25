@@ -2,6 +2,7 @@ import { Fragment, useRef } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import styled from "styled-components";
 import { markerList, tempPosition } from "../../store/recoil";
+import { markerData } from "../Map/ShowMap";
 
 const SetNewMarker = () => {
   const position = useRecoilValue(tempPosition);
@@ -16,7 +17,7 @@ const SetNewMarker = () => {
         (marker) => marker.lat === position.lat && marker.lng === position.lng
       )
     ) {
-      setMarkerList((prev: any[]) => [
+      setMarkerList((prev: markerData[]) => [
         ...prev,
         {
           title: titleRef.current!.value,
