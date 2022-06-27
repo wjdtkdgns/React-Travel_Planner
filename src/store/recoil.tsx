@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { dataType } from "../components/Search/Search";
 
 export const tempPosition = atom({
   key: "tempPosition",
@@ -14,7 +15,7 @@ export const markerList = atom({
   ],
 });
 
-export const searchedMarker = atom<any[]>({
+export const searchedMarker = atom<dataType[]>({
   key: "searchedMarker",
   default: [],
 });
