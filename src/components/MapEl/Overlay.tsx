@@ -1,8 +1,13 @@
 import { CustomOverlayMap } from "react-kakao-maps-sdk";
-import { markerData } from "../Map/ShowMap";
+import { markerDataType } from "../Map/ShowMap";
 import styled from "styled-components";
 
-const Overlay = ({ marker, onClose }: { marker: markerData; onClose: any }) => {
+interface overlayInterFace {
+  marker: markerDataType;
+  onClose: (marker: markerDataType) => void;
+}
+
+const Overlay = ({ marker, onClose }: overlayInterFace) => {
   return (
     <CustomOverlayMap
       position={{ lat: marker.lat, lng: marker.lng }}

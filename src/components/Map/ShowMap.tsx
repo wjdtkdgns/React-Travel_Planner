@@ -4,9 +4,9 @@ import Marker from "../MapEl/Marker";
 import Overlay from "../MapEl/Overlay";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { markerList, tempPosition } from "../../store/recoil";
-import Search from "../Search/asdas";
+import Search from "../Search/Search";
 
-export interface markerData {
+export interface markerDataType {
   title: string;
   body: string;
   lat: number;
@@ -14,11 +14,11 @@ export interface markerData {
 }
 
 const ShowMap = () => {
-  const [selectedMarker, setSelectedMarker] = useState<markerData[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState<markerDataType[]>([]);
   const [temp, setTempPosition] = useRecoilState(tempPosition);
   const markers = useRecoilValue(markerList);
 
-  const controlOverlayHandler = (marker: markerData) => {
+  const controlOverlayHandler = (marker: markerDataType) => {
     if (selectedMarker.includes(marker)) {
       const updatedSelectedMarker = selectedMarker.filter(
         (el) => el !== marker
@@ -53,7 +53,7 @@ const ShowMap = () => {
           })
         }
       >
-        {markers.map((marker: markerData) => {
+        {markers.map((marker: markerDataType) => {
           return (
             <Marker
               key={`EventMarkerContainer-${marker.lat}-${marker.lng}`}
@@ -63,7 +63,7 @@ const ShowMap = () => {
             />
           );
         })}
-        {selectedMarker.map((marker: markerData, index: number) => (
+        {selectedMarker.map((marker: markerDataType, index: number) => (
           <Overlay
             marker={marker}
             onClose={controlOverlayHandler}

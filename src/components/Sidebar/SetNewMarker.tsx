@@ -2,7 +2,7 @@ import { Fragment, useRef } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import styled from "styled-components";
 import { markerList, tempPosition } from "../../store/recoil";
-import { markerData } from "../Map/ShowMap";
+import { markerDataType } from "../Map/ShowMap";
 
 const SetNewMarker = () => {
   const position = useRecoilValue(tempPosition);
@@ -10,14 +10,14 @@ const SetNewMarker = () => {
   const titleRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (
       !markers.some(
         (marker) => marker.lat === position.lat && marker.lng === position.lng
       )
     ) {
-      setMarkerList((prev: markerData[]) => [
+      setMarkerList((prev: markerDataType[]) => [
         ...prev,
         {
           title: titleRef.current!.value,

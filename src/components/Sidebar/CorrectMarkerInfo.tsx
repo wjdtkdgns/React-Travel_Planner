@@ -6,15 +6,19 @@ import { markerList } from "../../store/recoil";
 const CorrectMarkerInfo = ({
   index,
   onClose,
+  onDelete,
 }: {
   index: number;
-  onClose: any;
+  onClose: () => void;
+  onDelete: () => void;
 }) => {
   const [markers, setMarkerList] = useRecoilState(markerList);
   const titleRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement>(null);
 
-  const correctHandler = () => {
+  const correctHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     const updatedMarkers = [...markers];
     updatedMarkers[index] = {
       title: titleRef.current!.value,
@@ -23,6 +27,12 @@ const CorrectMarkerInfo = ({
       lng: updatedMarkers[index].lng,
     };
     setMarkerList(updatedMarkers);
+    onClose();
+  };
+
+  const deleteHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    onDelete();
     onClose();
   };
 
@@ -38,7 +48,7 @@ const CorrectMarkerInfo = ({
       <textarea id="body" ref={bodyRef} />
       <div>
         <button onClick={correctHandler}>변경 완료</button>
-        <button onClick={onClose}>닫기</button>
+        <button onClick={deleteHandler}>삭제</button>
       </div>
     </Container>
   );

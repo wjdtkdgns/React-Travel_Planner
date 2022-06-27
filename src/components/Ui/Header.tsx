@@ -14,8 +14,8 @@ interface SearchModalType {
 }
 
 const Header = () => {
-  const [sidebar, setSidebar] = useState(false);
-  const [searchModal, setSearchModal] = useState(false);
+  const [sidebar, setSidebar] = useState<boolean>(false);
+  const [searchModal, setSearchModal] = useState<boolean>(false);
 
   const showSidebar = () => {
     setSidebar(!sidebar);
@@ -109,6 +109,7 @@ const NavMenu = styled.nav<NavMenuType>`
   left: ${(props) => (!props.sidebar ? "-100%" : "0")};
   transition: ${(props) => (!props.sidebar ? "850ms" : "350ms")};
   z-index: 500;
+  overflow: overlay;
 
   & ul {
     width: 100%;

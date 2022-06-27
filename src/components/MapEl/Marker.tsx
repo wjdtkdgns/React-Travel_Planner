@@ -1,6 +1,12 @@
 import { MapMarker } from "react-kakao-maps-sdk";
 
-const Marker = (props: { lat: number; lng: number; onClick?: any }) => {
+interface MarkerType {
+  lat: number;
+  lng: number;
+  onClick?: (marker: kakao.maps.Marker) => void;
+}
+
+const Marker = (props: MarkerType) => {
   return (
     <MapMarker // 마커를 생성합니다
       onClick={props.onClick}

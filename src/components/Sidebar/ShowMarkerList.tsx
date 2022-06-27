@@ -1,17 +1,25 @@
 import { Fragment, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { markerList } from "../../store/recoil";
-import { markerData } from "../Map/ShowMap";
+import { markerDataType } from "../Map/ShowMap";
 import CorrectMarkerInfo from "./CorrectMarkerInfo";
 
 const ShowMarkerList = () => {
-  const markers = useRecoilValue(markerList);
+  const [markers, setMarkers] = useRecoilState(markerList);
   const [correction, setCorrection] = useState<number>(-1);
+
+  const deleteMarker = (index: number) => {
+    const updatedMarkers = markers.filter(
+      (marker) =>
+        marker.lat !== markers[index].lat && marker.lng !== markers[index].lng
+    );
+    setMarkers(updatedMarkers);
+  };
 
   return (
     <Fragment>
-      {markers.map((marker: markerData, index: number) => (
+      {markers.map((marker: markerDataType, index: number) => (
         <Fragment key={index}>
           <Container>
             <p>
@@ -20,10 +28,14 @@ const ShowMarkerList = () => {
             <p>{marker.body}</p>
             <button
               onClick={() => {
-                setCorrection(index);
+                if (correction !== -1) {
+                  setCorrection(-1);
+                } else {
+                  setCorrection(index);
+                }
               }}
             >
-              수정
+              {correction === index ? "닫기" : "수정"}
             </button>
           </Container>
           {correction === index && (
@@ -32,6 +44,7 @@ const ShowMarkerList = () => {
               onClose={() => {
                 setCorrection(-1);
               }}
+              onDelete={deleteMarker.bind(null, index)}
             />
           )}
         </Fragment>
