@@ -45,7 +45,6 @@ const Search = () => {
     if (status === window.kakao.maps.services.Status.OK) {
       setPaginationValue(pagination);
       setMarkers([]);
-      console.log(data);
       data.map((marker: dataType) => {
         setMarkers((prev) => [...prev, marker]);
         bounds.extend(new window.window.kakao.maps.LatLng(marker.y, marker.x));
@@ -70,6 +69,8 @@ const Search = () => {
       });
     }
   }, [keyword]);
+
+  console.log(markers);
 
   return (
     <Fragment>
@@ -97,7 +98,9 @@ const Search = () => {
             }
           >
             {infoGrid && infoGrid.x === marker.x && infoGrid.y === marker.y && (
-              <div style={{ color: "#000" }}>{marker.place_name}</div>
+              <div style={{ color: "#000", padding: "5px", zIndex: "1" }}>
+                {marker.place_name}
+              </div>
             )}
           </MapMarker>
         );

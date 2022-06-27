@@ -11,7 +11,7 @@ declare global {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Planning />} />
+      <Route path="*" element={<Planning />} />
     </Routes>
   );
 }

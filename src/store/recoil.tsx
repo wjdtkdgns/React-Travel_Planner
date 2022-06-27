@@ -1,12 +1,13 @@
 import { atom } from "recoil";
+import { markerDataType } from "../components/Map/ShowMap";
 import { dataType } from "../components/Search/Search";
 
-export const tempPosition = atom({
+export const tempPosition = atom<{ lat: number; lng: number }>({
   key: "tempPosition",
   default: { lat: 0, lng: 0 },
 });
 
-export const markerList = atom({
+export const markerList = atom<markerDataType[]>({
   key: "markerList",
   default: [
     { title: "1", body: "111", lat: 33.44975, lng: 126.56967 },
